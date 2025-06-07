@@ -1,0 +1,203 @@
+#include <iostream.h>
+#include <conio.h>
+#include <dos.h>
+#include <graphics.h>
+#include <stdlib.h>
+
+float balance = 0;
+int userPIN = 0;
+
+void soundBeep() 
+{
+    sound(900);
+    delay(100);
+    nosound();
+}
+
+void drawTitle() 
+{
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "C:\\Turboc3\\BGI");
+    setcolor(3);
+    settextstyle(3, 0, 3);
+    outtextxy(150, 50, "Paytm Mini Project in C++");
+    setcolor(15);
+    rectangle(50, 40, 570, 120);
+    delay(1000);
+    closegraph();
+}
+
+void createPIN() 
+{
+    clrscr();
+    cout << "\nCreate Your 4 Digit PIN: ";
+    cin >> userPIN;
+    soundBeep();
+    cout << "\nPIN Created Successfully!";
+    delay(1000);
+}
+
+int verifyPIN()
+{
+    int pin;
+    cout << "\nEnter your PIN: ";
+    cin >> pin;
+    if (pin == userPIN) return 1;
+    else 
+	{
+        cout << "Invalid PIN!\n";
+        soundBeep();
+	return 0;
+    }
+}
+
+void creditAmount() 
+{
+    float amt;
+    clrscr();
+    cout << "\nEnter amount to credit: ";
+    cin >> amt;
+    balance += amt;
+    soundBeep();
+    cout << "\nAmount credited successfully. Balance: " << balance;
+    delay(1000);
+}
+
+void debitAmount() 
+{
+    float amt;
+    clrscr();
+    cout << "\nEnter amount to debit: ";
+    cin >> amt;
+    if (amt > balance) 
+	{
+        cout << "\nInsufficient Balance!";
+        soundBeep();
+    } else 
+	{
+        balance -= amt;
+        cout << "\nAmount debited successfully. Balance: " << balance;
+        soundBeep();
+    }
+    delay(1000);
+}
+
+void rechargePlans() 
+{
+    int ch;
+    clrscr();
+    cout << "\nChoose Network to Recharge:\n";
+    cout << "1. Jio\n2. Airtel\n3. BSNL\n4. Idea\n";
+    cout << "Enter choice: ";
+    cin >> ch;
+
+    cout << "\nAvailable Plans:\n";
+    switch (ch) 
+	{
+        case 1:
+            cout << "Jio Plans:\n1. Rs.239 - 28 Days\n2. Rs.666 - 84 Days\n";
+            break;
+        case 2:
+            cout << "Airtel Plans:\n1. Rs.265 - 28 Days\n2. Rs.719 - 84 Days\n";
+            break;
+        case 3:
+            cout << "BSNL Plans:\n1. Rs.187 - 28 Days\n2. Rs.666 - 90 Days\n";
+            break;
+        case 4:
+            cout << "Idea Plans:\n1. Rs.245 - 28 Days\n2. Rs.699 - 84 Days\n";
+            break;
+        default:
+            cout << "Invalid Choice!";
+            soundBeep();
+            return;
+    }
+
+    int plan;
+    cout << "\nChoose plan number: ";
+    cin >> plan;
+
+    float price = (plan == 2) ? 666 : 239;
+    if (price > balance) 
+	{
+        cout << "\nInsufficient balance for recharge!";
+        soundBeep();
+    } else 
+	{
+        balance -= price;
+        cout << "\nRecharge successful! Remaining balance: " << balance;
+        soundBeep();
+    }
+    delay(1000);
+}
+
+void movieBooking() 
+{
+    clrscr();
+    char movie[20];
+    int tickets;
+    cout << "\nEnter Movie Name: ";
+    cin >> movie;
+    cout << "No. of tickets: ";
+    cin >> tickets;
+
+    float total = tickets * 120;
+
+    if (total > balance) 
+	{
+        cout << "\nInsufficient balance!";
+        soundBeep();
+    } else 
+	{
+        balance -= total;
+        cout << "\nTickets Booked for " << movie;
+        cout << "\nTotal cost: Rs. " << total;
+        cout << "\nRemaining Balance: Rs. " << balance;
+        soundBeep();
+    }
+    delay(1000);
+}
+
+void mainMenu() 
+{
+    int choice;
+    do {
+    	
+        clrscr();
+        cout << "---- Paytm Main Menu ----\n";
+        cout << "1. Credit Amount\n";
+        cout << "2. Debit Amount\n";
+        cout << "3. Recharge\n";
+        cout << "4. Book Movie Ticket\n";
+        cout << "5. Show Balance\n";
+        cout << "6. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (!verifyPIN()) 
+		{
+            delay(1000);
+            continue;
+        }
+
+        switch (choice) 
+		{
+            case 1: creditAmount(); break;
+            case 2: debitAmount(); break;
+            case 3: rechargePlans(); break;
+            case 4: movieBooking(); break;
+            case 5: cout << "\nCurrent Balance: " << balance; delay(1000); break;
+            case 6: cout << "\nExiting App..."; delay(1000); break;
+            default: cout << "Invalid Choice!"; soundBeep(); delay(1000);
+        }
+
+    } while (choice != 6);
+}
+
+void main() 
+{
+    clrscr();
+    drawTitle();
+    createPIN();
+    mainMenu();
+    getch();
+}
